@@ -4,4 +4,4 @@ sseg:
   site:
     host: http://localhost:8080
     refresh-token-url: '${sseg.site.host}/api/jwt/application/refreshToken?appId=${sseg.appId}&appSecret=${sseg.appSecret}'
-    access-token-url:
+    access-token-url: '${sseg.site.host}/api/jwt/application/accessToken'

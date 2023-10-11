@@ -27,9 +27,13 @@ public class TestGo {
     
     @Test
     public void test() {
-        String refreshToken = jwtApiClient.requestGetRefreshToke();
+        String refreshToken = jwtApiClient.requestGetRefreshToken();
+        
         jwtTokenRepository.setRefreshToken(refreshToken);
         System.out.println(jwtTokenRepository.getRefreshToken());
+        
+        jwtTokenRepository.setAccessToken(jwtApiClient.requestGetAccessToken());
+        System.out.println(jwtTokenRepository.getAccessToken());
     }
 
 }
