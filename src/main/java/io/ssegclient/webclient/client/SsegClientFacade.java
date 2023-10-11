@@ -9,6 +9,8 @@ import io.ssegclient.base.repository.JwtTokenRepository;
 import io.ssegclient.webclient.model.mail.ApiEmailRequest;
 import io.ssegclient.webclient.model.mail.EmailResponse;
 
+import java.util.Objects;
+
 
 public class SsegClientFacade {
     
@@ -30,16 +32,24 @@ public class SsegClientFacade {
     
     public ApiResponse<EmailResponse> sendMail(ApiEmailRequest request) throws SsegApiResponseException {
         
-        // request 객체를 json으로 직렬화하여 api를 요청
-        ApiResponse<EmailResponse> response = emailApiClient.requestSendMail(request, repository.getAccessToken());
+        ApiResponse<EmailResponse> response = null;
         
-        // 만약, response의 에러가 TOKEN_EXPIRED라면, access token을 갱신하고 다시 요청
-        if(response.getStatus() == SsegApiResponseStatus.TOKEN_EXPIRED){
-            repository.renewAccessToken();
+        // request 객체를 json으로 직렬화하여 api를 요청
+        try {
             response = emailApiClient.requestSendMail(request, repository.getAccessToken());
+        } catch(SsegApiResponseException e){
+            
+            ApiResponse error = e.getResponse();
+            
+            // 만약, response의 에러가 TOKEN_EXPIRED라면, access token을 갱신하고 다시 요청
+            if(error.getStatus() == SsegApiResponseStatus.TOKEN_EXPIRED){
+                repository.renewAccessToken();
+                response = emailApiClient.requestSendMail(request, repository.getAccessToken());
+            }
         }
         
         // 값을 받아오는데 성공했다면, response를 리턴
+        Objects.requireNonNull(response);
         if(response.getStatus() == SsegApiResponseStatus.SUCCESS){
             return response;
             

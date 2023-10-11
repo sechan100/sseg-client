@@ -9,7 +9,10 @@ public class SsegApiResponseException extends RuntimeException {
     private final ApiResponse<?> response;
     
     public SsegApiResponseException(ApiResponse<?> response){
-        super(response.getStatus() + response.getMsg());
+        super("\n========================================================\n" +
+                "STATUS: " + response.getStatus() + "\n" +
+                "MSG: " + response.getMsg() +
+              "\n========================================================");
         this.response = response;
     }
 }

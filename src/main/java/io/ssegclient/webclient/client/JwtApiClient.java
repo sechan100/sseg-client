@@ -28,6 +28,11 @@ public class JwtApiClient {
         ApiResponse response = webClient.get()
                 .uri(appProperties.getSite().getRefreshTokenUrl())
                 .retrieve()
+                .onStatus(
+                        status -> !status.equals(HttpStatus.OK),
+                        clientResponse -> clientResponse.bodyToMono(ApiResponse.class)
+                                .map(SsegApiResponseException::new)
+                )
                 .bodyToMono(ApiResponse.class)
                 .block();
         
@@ -54,6 +59,11 @@ public class JwtApiClient {
                 .uri(appProperties.getSite().getAccessTokenUrl())
                 .header("Authorization", "Bearer " + refreshToken)
                 .retrieve()
+                .onStatus(
+                        status -> !status.equals(HttpStatus.OK),
+                        clientResponse -> clientResponse.bodyToMono(ApiResponse.class)
+                                .map(SsegApiResponseException::new)
+                )
                 .bodyToMono(ApiResponse.class)
                 .block();
         

@@ -5,8 +5,7 @@ import io.ssegclient.base.http.ApiResponse;
 import io.ssegclient.base.repository.JwtTokenRepository;
 import io.ssegclient.webclient.client.SsegClientFacade;
 import io.ssegclient.webclient.config.WebClientConfig;
-import io.ssegclient.webclient.model.mail.ApiEmailRequest;
-import io.ssegclient.webclient.model.mail.EmailRequest;
+import io.ssegclient.webclient.model.mail.ApiEmailRequestBuilder;
 import io.ssegclient.webclient.model.mail.EmailResponse;
 import model.Comment;
 import org.junit.jupiter.api.Test;
@@ -15,9 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 @ContextConfiguration(classes = {ClientAppConfig.class, WebClientConfig.class, RepositoryConfig.class})
@@ -34,23 +31,19 @@ public class TestGo {
     private SsegClientFacade ssegClientFacade;
     
     @Test
-    public void test() {
-        ApiEmailRequest request = new ApiEmailRequest();
+    public void test() throws InterruptedException {
+        ApiEmailRequestBuilder builder = new ApiEmailRequestBuilder();
         
-        EmailRequest emailRequest = new EmailRequest();
+        builder.setFrom("sechan");
+        builder.setTo("sechan100@gmail.com");
+        builder.setSubject("되냐?");
         
-        emailRequest.setFrom("sechan");
-        emailRequest.setTo("sechan100@gmail.com");
-        emailRequest.setSubject("되냐?");
-        request.setEmailRequest(emailRequest);
+        builder.setTemplateName("testTemplate");
         
-        request.setTemplateName("testTemplate");
-        
-        Map<String, Object> args = new HashMap<>();
-        args.put("policy", "sechan");
-        args.put("action", "sechan");
-        args.put("msg", "sechan");
-        args.put("comments", List.of(
+        builder.addArg("policy", "sechan");
+        builder.addArg("action", "sechan");
+        builder.addArg("msg", "sechan");
+        builder.addArg("comments", List.of(
                 new Comment("1", "11111"),
                 new Comment("2", "22222"),
                 new Comment("3", "33333"),
@@ -59,10 +52,11 @@ public class TestGo {
                 new Comment("6", "66666")
         ));
         
-        request.setTemplateArgs(args);
-        
-        ApiResponse<EmailResponse> response = ssegClientFacade.sendMail(request);
+        ApiResponse<EmailResponse> response = ssegClientFacade.sendMail(builder.build());
         System.out.println(response);
+        Thread.sleep(1000L * 40);
+        ApiResponse<EmailResponse> response2 = ssegClientFacade.sendMail(builder.build());
+        System.out.println(response2);
     }
     
 }
