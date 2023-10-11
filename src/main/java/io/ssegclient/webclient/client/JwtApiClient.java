@@ -1,8 +1,8 @@
-package io.ssegclient.webclient;
+package io.ssegclient.webclient.client;
 
-import io.ssegclient.core.ClientAppProperties;
-import io.ssegclient.exception.ApiCallFailureException;
-import io.ssegclient.webclient.model.ApiResponse;
+import io.ssegclient.base.constants.ClientAppProperties;
+import io.ssegclient.base.exception.SsegApiResponseException;
+import io.ssegclient.base.http.ApiResponse;
 import io.ssegclient.webclient.model.RefreshTokenRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
@@ -40,18 +40,16 @@ public class JwtApiClient {
             return (String) response.getData();
             
         } else {
-            throw new ApiCallFailureException(response);
+            throw new SsegApiResponseException(response);
         }
         
         
     }
     
-    public String requestGetAccessToken(){
-        
-        // 리프레시 토큰을 가져와서 request 구성: 헤더에 'Authorization: Bearer {리프레시 토큰}' 추가.
-        String refreshToken = requestGetRefreshToken();
+    public String requestGetAccessToken(String refreshToken) throws SsegApiResponseException {
         
         // api 요청 보내고 액세스 토큰 받기
+        // 리프레시 토큰으로 request 구성: 헤더에 'Authorization: Bearer {리프레시 토큰}' 추가.
         ApiResponse response = webClient.get()
                 .uri(appProperties.getSite().getAccessTokenUrl())
                 .header("Authorization", "Bearer " + refreshToken)
@@ -68,32 +66,9 @@ public class JwtApiClient {
             return (String) response.getData();
             
         } else {
-            throw new ApiCallFailureException(response);
+            throw new SsegApiResponseException(response);
         }
         
     }
     
-    
-    
-    
-    
-    
-    public void someMethod() {
-        
-        // GET 요청
-        String response = webClient.get()
-                .uri("http://example.com/api/resource")
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        
-//        // POST 요청
-//        MyRequest myRequest = new MyRequest("data1", "data2");
-//        MyResponse myResponse = webClient.post()
-//                .uri("http://example.com/api/resource")
-//                .body(Mono.just(myRequest), MyRequest.class)
-//                .retrieve()
-//                .bodyToMono(MyResponse.class)
-//                .block();
-    }
 }

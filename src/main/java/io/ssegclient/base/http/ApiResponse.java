@@ -1,6 +1,6 @@
-package io.ssegclient.webclient.model;
+package io.ssegclient.base.http;
 
-import io.ssegclient.constants.SsegApiResponseStatus;
+import io.ssegclient.base.constants.SsegApiResponseStatus;
 import lombok.Data;
 
 @Data
@@ -21,4 +21,6 @@ public class ApiResponse<T> {
     public boolean isSuccess(){
         return this.status == SsegApiResponseStatus.SUCCESS;
     }
+    
+    
 }

@@ -2,6 +2,7 @@ sseg:
   appId: d0273e23-080b-4e8b-b651-82cfb9276e88
   appSecret: p0KwfbLc7KjOF2_J-XUCRamAW
   site:
-    host: http://localhost:8080
-    refresh-token-url: '${sseg.site.host}/api/jwt/application/refreshToken?appId=${sseg.appId}&appSecret=${sseg.appSecret}'
-    access-token-url: '${sseg.site.host}/api/jwt/application/accessToken'
+    base-url: http://localhost:8080
+    refresh-token-url: '${sseg.site.base-url}/api/jwt/application/refreshToken?appId=${sseg.appId}&appSecret=${sseg.appSecret}'
+    access-token-url: '${sseg.site.base-url}/api/jwt/application/accessToken'
+    send-email-url: '${sseg.site.base-url}/api/email/send'

@@ -1,4 +1,4 @@
-package io.ssegclient.core;
+package io.ssegclient.base.constants;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,8 +14,9 @@ public class ClientAppProperties {
     
     @Data
     public static class Site {
-        private String host;
+        private String baseUrl;
         private String refreshTokenUrl;
         private String accessTokenUrl;
+        private String sendEmailUrl;
     }
 }
